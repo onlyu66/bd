@@ -85,7 +85,7 @@ join order_details od
 on o.id = od.order_id
 group by o.id;
 
-select od.order_id as order_id, p.name as product_name , od.price*od.quantity as price, od.quantity as quantity
+select od.order_id as order_id, p.name as product_name , od.price as price, od.quantity as quantity, od.price*od.quantity as total_price
 from order_details od
 join products p
 on od.product_id = p.id
