@@ -59,13 +59,11 @@ insert into orders (user_id,ship_address,phone_number) values('3','nhat ban','03
 insert into orders (user_id,ship_address,phone_number) values('1','sai gon','0368353983');
 insert into orders (user_id,ship_address,phone_number) values('4','ha noi','044355173');
 
-insert into order_details (order_id, product_id, price, quantity) values(1,2,600,3);
-insert into order_details (order_id, product_id, price, quantity) values(2,5,300,6);
-insert into order_details (order_id, product_id, price, quantity) values(3,4,1500,5);
+insert into order_details (order_id, product_id, price, quantity) values(1,2,200,3);
+insert into order_details (order_id, product_id, price, quantity) values(2,5,50,6);
+insert into order_details (order_id, product_id, price, quantity) values(3,4,300,5);
 insert into order_details (order_id, product_id, price, quantity) values(4,1,100,1);
-insert into order_details (order_id, product_id, price, quantity) values(5,2,400,2);
-
-delete from order_details where order_id = 5;
+insert into order_details (order_id, product_id, price, quantity) values(5,2,200,2);
 
 select c.*, count(p.id)
 from categories c
@@ -79,7 +77,7 @@ join categories c
 on p.category_id = c.id;
 
 select o.id as id, u.name as name_user, o.ship_address as ship_address,
-o.phone_number as phone_number, o.status as status, sum(od.price) as total_price
+o.phone_number as phone_number, o.status as status, sum(od.price*od.quantity) as total_price
 from orders o
 join users u 
 on o.user_id = u.id
@@ -87,7 +85,8 @@ join order_details od
 on o.id = od.order_id
 group by o.id;
 
-select od.order_id as order_id, p.name as product_name , od.price as price, od.quantity as quantity
+select od.order_id as order_id, p.name as product_name , od.price*od.quantity as price, od.quantity as quantity
 from order_details od
 join products p
-on od.product_id = p.id;
+on od.product_id = p.id
+where od.order_id=1;
