@@ -90,3 +90,75 @@ from order_details od
 join products p
 on od.product_id = p.id
 where od.order_id=1;
+
+CREATE VIEW products_view AS
+SELECT p.id, p.name as product_name, p.price as product_price, c.name as category_name
+FROM products p
+JOIN categories c
+ON p.category_id = c.id;
+
+SELECT * FROM products_view;
+
+CREATE INDEX index_user_name
+ON users (name);
+
+
+-- Thêm mới sản phẩm
+DELIMITER //
+CREATE PROCEDURE ADD_PRODUCT(IN name_ varchar(100), price_ int, category_id_ int )
+BEGIN
+    INSERT INTO products (name, price, category_id) VALUES (name_, price_, category_id_);
+END //
+DELIMITER ;
+
+-- Sửa sản phẩm
+DELIMITER //
+CREATE PROCEDURE UPDATE_PRODUCT(IN id_ int, name_ varchar(100), price_ int, category_id_ int )
+BEGIN
+    UPDATE products SET name=name_, price=price_, category_id=category_id_ WHERE id=id_;
+END //
+DELIMITER ;
+
+-- Xoá sản phẩm
+DELIMITER //
+CREATE PROCEDURE DELETE_PRODUCT(IN id_ int )
+BEGIN
+    DELETE FROM products WHERE id=id_;
+END //
+DELIMITER ;
+
+-- Tìm kiếm sản phẩm theo id
+DELIMITER //
+CREATE PROCEDURE SEARCH_PRODUCT_BY_ID(IN id_ int )
+BEGIN
+    SELECT * FROM products WHERE id=id_;
+END //
+DELIMITER ;
+
+-- Phân trang
+DELIMITER //
+CREATE PROCEDURE PAGINATE(IN limit_ INT, page_current INT)
+BEGIN
+    DECLARE offset_value INT;
+
+    SET offset_value = (page_current - 1) * limit_;
+
+    SELECT * FROM products LIMIT limit_ OFFSET offset_value;
+END //
+DELIMITER ;
+
+-- Test
+CALL PAGINATE(3,1);
+
+CALL ADD_PRODUCT('ao so mi','130','1');
+CALL ADD_PRODUCT('quan jean','330','2');
+CALL ADD_PRODUCT('quan dui','130','2');
+CALL ADD_PRODUCT('mu bong chuyen','230','3');
+CALL ADD_PRODUCT('giay da bong','530','4');
+CALL ADD_PRODUCT('dep con tho','130','5');
+
+CALL UPDATE_PRODUCT(6, 'ao tay ngan', '120',1);
+select * from categories;
+
+select * from products_view;
+
